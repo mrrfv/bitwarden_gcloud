@@ -10,7 +10,7 @@ maxretry = 5
 
 [bitwarden]
 enabled = true
-port = 80,443,8081
+port = 80,443,8081,5271
 filter = bitwarden
 logpath = /bitwarden/bitwarden.log
 action = iptables-allports[name=bitwarden, chain=FORWARD]
@@ -18,7 +18,7 @@ action = iptables-allports[name=bitwarden, chain=FORWARD]
 
 [bitwarden-admin]
 enabled = true
-port = 80,443
+port = 80,443,5271
 filter = bitwarden-admin
 logpath = /bitwarden/bitwarden.log
 action = iptables-allports[name=bitwarden, chain=FORWARD]

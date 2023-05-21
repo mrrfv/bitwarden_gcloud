@@ -25,11 +25,15 @@ This is a quick-start guide. Read about this project in more detail [here](https
 
 This fork replaces Caddy and DDNS with a Cloudflare Tunnel, a safer way to expose the app in comparison to opening the ports in your Google Cloud firewall. It also increases the number of days your backups are kept.
 
+## Important
+
+* Fail2ban hasn't been tested with the Cloudflare Tunnel.
+* Work in progress.
+
 ## Features
 
 * Bitwarden self-hosted
 * Blocking brute-force attempts with fail2ban
-* Country-wide blocking through iptables and ipset
 
 ## Pre-requisites
 

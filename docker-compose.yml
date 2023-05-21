@@ -14,13 +14,15 @@ services:
     - proxy
     volumes:
     - ${PWD}/bitwarden:/data
+    ports:
+    - 5271:80
     environment:
     - LOG_FILE=/data/bitwarden.log
     - WEBSOCKET_ENABLED=true            # required for websockets
     - SHOW_PASSWORD_HINT=false
     - DOMAIN=https://${DOMAIN}          # DOMAIN is set in .env but doesn't have protocol prefix
     - SMTP_FROM_NAME=Bitwarden (${DOMAIN})
-    - IP_HEADER=X-Forwarded-For
+    - IP_HEADER=X-Real-IP               # X-Real-IP cannot be overwritten by the user
     - ADMIN_TOKEN                       # Value-less variables are set in .env
     - SIGNUPS_ALLOWED
     - SMTP_HOST
@@ -44,6 +46,16 @@ services:
     - BACKUP_RCLONE_CONF
     - BACKUP_RCLONE_DEST
     - TZ
+
+  tunnel:
+    container_name: cloudflared
+    image: cloudflare/cloudflared
+    restart: always
+    command: tunnel run
+    depends_on:
+      - bitwarden
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
 
   fail2ban:
     # Implements fail2ban functionality, banning ips that 
@@ -77,28 +89,6 @@ services:
     - SSMTP_STARTTLS=YES
     - TZ
 
-
-  countryblock:
-    # The block script will block any country (defaults to CN and AU)
-    # Requires cap_add as listed and privileged because it uses iptables and ipset
-    # https://hub.docker.com/_/alpine/
-    #build: ./docker/countryblock                       # backup, in case container registry is not responsive
-    image: ghcr.io/dadatuputi/bwgc_countryblock:master  # from https://github.com/dadatuputi/bwgc_countryblock
-    restart: always
-    container_name: countryblock
-    depends_on: 
-    - bitwarden
-    network_mode: "host"
-    privileged: true
-    cap_add:
-    - NET_ADMIN
-    - NET_RAW
-    environment:
-    - COUNTRIES
-    - COUNTRYBLOCK_SCHEDULE
-    - TZ
-
-
   watchtower:
     # Watchtower will pull down your new image, gracefully shut down your existing container 
     # and restart it with the same options that were used when it was deployed initially
@@ -114,7 +104,3 @@ services:
     - WATCHTOWER_CLEANUP=true
     - WATCHTOWER_SCHEDULE
     - TZ
-
-
-volumes:
-  caddycerts:
