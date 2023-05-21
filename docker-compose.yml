@@ -45,46 +45,6 @@ services:
     - BACKUP_RCLONE_DEST
     - TZ
 
-  proxy:
-    # Caddy provides an automatic HTTPS reverse proxy with Let's Encrypt cert provisioning
-    # Uses local Dockerfile to include tzdata package
-    # https://caddyserver.com/
-    #build: ./docker/proxy                              # backup, in case container registry is not responsive
-    image: ghcr.io/dadatuputi/bwgc_caddy:master         # from https://github.com/dadatuputi/bwgc_proxy
-    restart: always
-    container_name: proxy
-    volumes:
-    - ${PWD}/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-    - ${PWD}/caddy/data:/data
-    - caddycerts:/root/.caddy
-    ports:
-    - 80:80                             # Port 80 is necessary for Let's Encrypt ACME
-    - 443:443
-    environment:
-    - LOG_FILE=/data/logs/caddy.log
-    - ACME_AGREE=true                   # agree to ACME for auto HTTPS
-    - DOMAIN                            # Value-less variables are set in .env
-    - EMAIL
-    - TZ
-
-
-  ddns:
-    # This provides a ddclient dynamic dns updating cron which is as simple as running it
-    # and editing the ddns/config/ddclient.conf file
-    # https://github.com/linuxserver/docker-ddclient
-    image: linuxserver/ddclient
-    restart: always
-    container_name: ddns
-    depends_on: 
-    - bitwarden
-    volumes:
-    - ${PWD}/ddns:/config
-    environment:
-    - PUID
-    - PGID
-    - TZ
-
-
   fail2ban:
     # Implements fail2ban functionality, banning ips that 
     # try to bruteforce your vault
