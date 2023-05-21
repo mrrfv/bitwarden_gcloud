@@ -50,14 +50,17 @@ Google Cloud offers an '[always free](https://cloud.google.com/free/)' tier of t
 Go to [Google Compute Engine](https://cloud.google.com/compute) and open a Cloud Shell. You may also create the instance manually following [the constraints of the free tier](https://cloud.google.com/free/docs/gcp-free-tier). In the Cloud Shell enter the following command to build the properly spec'd machine: 
 
 ```bash
-$ gcloud compute instances create bitwarden \
+gcloud compute instances create bitwarden \
     --machine-type e2-micro \
     --zone us-central1-a \
     --image-project cos-cloud \
     --image-family cos-stable \
     --boot-disk-size=30GB \
-    --tags http-server,https-server \
-    --scopes compute-rw
+    --boot-disk-type pd-standard \
+    --scopes compute-rw \
+    --network-tier STANDARD \
+    --ipv6-network-tier STANDARD \
+    --deletion-protection
 ```
 
 You may change the zone to be closer to you or customize the name (`bitwarden`), but most of the other values should remain the same. 
