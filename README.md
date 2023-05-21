@@ -27,13 +27,14 @@ This fork replaces Caddy and DDNS with a Cloudflare Tunnel, a safer way to expos
 
 ## Important
 
-* Fail2ban hasn't been tested with the Cloudflare Tunnel.
+* Fail2ban has been removed in favor of Cloudflare's rate limiting rules. **You must set them up yourself!**
 * Work in progress.
 
 ## Features
 
 * Bitwarden self-hosted
 * Blocking brute-force attempts with fail2ban
+* Simplified as much as possible
 
 ## Pre-requisites
 
@@ -66,7 +67,7 @@ You may change the zone to be closer to you or customize the name (`bitwarden`),
 Enter a shell on the new instance and clone this repo:
 
 ```bash
-$ git clone https://github.com/dadatuputi/bitwarden_gcloud.git
+$ git clone https://github.com/mrrfv/bitwarden_gcloud.git
 $ cd bitwarden_gcloud
 ```
 
@@ -83,17 +84,6 @@ docker-compose version 1.25.5, build 8a1c60f
 
 I provide `.env.template` which should be copied to `.env` and filled out; filling it out is self-explanitory and requires certain values such as a domain name, Cloudflare API tokens, etc. 
 Be aware that there is an optional backup section that allows you to have an encrypted backup regularly backed up and emailed or synced to cloud storage. More documentation on this feature is available [here](https://bradford.la/2020/self-host-bitwarden-on-google-cloud/#configure-bitwarden-backups-optional).
-
-### Configure `fail2ban` (_optional_)
-
-`fail2ban` stops brute-force attempts at your vault. To configure how long a ban is and how many attempts will trigger a ban, edit `fail2ban/jail.d/jail.local`:
-
-```conf
-bantime = 6h <- how long to enforce the ip ban
-maxretry = 5  <- number of times to retry until a ban occurs
-```
-
-This will work out of the box - no `fail2ban` configuration is needed unless you want e-mail alerts of bans. To enable this, enter the SMTP settings in `.env`, and follow the instructions in `fail2ban/jail.d/jail.local` by uncommenting and entering `destemail` and `sender` and uncommenting the `action_mwl` action in the `bitwarden` and `bitwarden-admin` jails in the same file.
 
 ### Configure Automatic Rebooting After Updates (_optional_)
 

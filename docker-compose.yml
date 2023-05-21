@@ -57,38 +57,6 @@ services:
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
 
-  fail2ban:
-    # Implements fail2ban functionality, banning ips that 
-    # try to bruteforce your vault
-    # https://github.com/dani-garcia/vaultwarden/wiki/Fail2Ban-Setup
-    # https://github.com/crazy-max/docker-fail2ban
-    image: crazymax/fail2ban:latest
-    restart: always
-    container_name: fail2ban
-    depends_on:
-    - bitwarden
-    volumes:
-    - ${PWD}/fail2ban:/data
-    - ${PWD}/bitwarden:/bitwarden:ro
-    network_mode: "host"
-    privileged: true
-    cap_add:
-    - NET_ADMIN
-    - NET_RAW
-    environment:
-    - F2B_DB_PURGE_AGE=30d
-    - F2B_LOG_TARGET=/data/fail2ban.log
-    - F2B_LOG_LEVEL=INFO
-    - F2B_IPTABLES_CHAIN=INPUT
-    - SSMTP_HOST=${SMTP_HOST}
-    - SSMTP_PORT=${SMTP_PORT}
-    - SSMTP_USER=${SMTP_USERNAME}
-    - SSMTP_PASSWORD=${SMTP_PASSWORD}
-    - SSMTP_HOSTNAME=Bitwarden (${DOMAIN})
-    - SSMTP_TLS=${SMTP_TLS}
-    - SSMTP_STARTTLS=YES
-    - TZ
-
   watchtower:
     # Watchtower will pull down your new image, gracefully shut down your existing container 
     # and restart it with the same options that were used when it was deployed initially
