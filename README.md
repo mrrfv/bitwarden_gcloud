@@ -21,11 +21,13 @@ This is a quick-start guide. Read about this project in more detail [here](https
 
 ---
 
+## My changes
+
+This fork replaces Caddy and DDNS with a Cloudflare Tunnel, a safer way to expose the app in comparison to opening the ports in your Google Cloud firewall. It also increases the number of days your backups are kept.
+
 ## Features
 
 * Bitwarden self-hosted
-* Automatic https certificate management through Caddy 2 proxy
-* Dynamic DNS updates through ddclient
 * Blocking brute-force attempts with fail2ban
 * Country-wide blocking through iptables and ipset
 
@@ -34,11 +36,7 @@ This is a quick-start guide. Read about this project in more detail [here](https
 Before you start, ensure you have the following:
 
 1. A Google Cloud account
-2. A Cloudflare-managed DNS site with an A record ready for Bitwarden
-
-### f1-micro -> e2-micro migration
-
-_As of 1 August 2021, Google added the e2-micro machine type to the free tier. Google has contacted existing f1-micro users with a suggestion to upgrade to the more powerful e2-micro type (details in [this reddit thread](https://www.reddit.com/r/googlecloud/comments/oo55s1/upgraded_free_tier_f1micro_vm_to_an_e2micro/)). Upgrading existing f1-micro instances running bitwarden_gcloud is easy can be accomplished following steps at the bottom of this README._
+2. A Cloudflare Zero Trust account and a domain set up
 
 ## Step 1: Set up Google Cloud `e2-micro` Compute Engine Instance
 
@@ -136,16 +134,3 @@ $ docker-compose up
 ```
 
 You can now use your browser to visit your new Bitwarden site. 
-
-## f1-micro to e2-micro Migration
-
-Follow these steps to migrate from the previous free tier f1-micro to the new free tier e2-micro.
-
-1.  Shut down your VM instance
-2.  Edit the vm instance to machine type e2-micro using the google cloud GUI or cloud shell. 
-3.  Boot the VM again and everything should start as before. 
-
-Note that after shutting down and booting the new machine type, it may take a while for the DNS record's TTL to expire and point to the new IP which gets changed after a shutdown. 
-
-# Notes
-For a pure Cloudflare approach, see [this issue](https://github.com/dadatuputi/bitwarden_gcloud/issues/5).
