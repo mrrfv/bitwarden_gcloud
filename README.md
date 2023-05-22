@@ -59,6 +59,9 @@ gcloud compute instances create bitwarden \
     --boot-disk-type pd-standard \
     --scopes compute-rw \
     --network-tier STANDARD \
+    --shielded-secure-boot \
+    --shielded-vtpm \
+    --shielded-integrity-monitoring \
     --deletion-protection
 ```
 
