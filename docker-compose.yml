@@ -10,8 +10,6 @@ services:
     image: ghcr.io/dadatuputi/bwgc_vaultwarden:master           # from https://github.com/dadatuputi/bwgc_vaultwarden
     restart: always
     container_name: bitwarden
-    depends_on: 
-    - proxy
     volumes:
     - ${PWD}/bitwarden:/data
     ports:
