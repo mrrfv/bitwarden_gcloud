@@ -72,7 +72,7 @@ You may change the zone to be closer to you or customize the name (`bitwarden`),
 Enter a shell on the new instance and clone this repo:
 
 ```bash
-$ git clone https://github.com/mrrfv/bitwarden_gcloud.git
+$ git clone https://github.com/mrrfv/bitwarden_gcloud_cloudflare_tunnel.git
 $ cd bitwarden_gcloud
 ```
 
